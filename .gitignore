@@ -1,0 +1,23 @@
+node_modules/
+dist/
+web/dist/
+web/node_modules/
+.env
+.env.local
+*.log
+logs/
+coverage/
+.DS_Store
+pgdata/
+# SQLite 数据文件（本地运行产物）
+data/
+# 运行时打包产物（npm run pack:runtime 生成，不进仓库）
+dsh/pack/runtime/
+# 编辑器与助手生成的本地数据，不属于项目源码
+.codebuddy/
+# npm pack 产物
+*.tgz
+# 代码索引缓存（IDE 生成，可重建）
+.codegraph/
+# 本地粘贴的 QQ 提示词样本，含 QQ 号与令牌，不进版本库
+提示词.txt

@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    container_name: memlattice-app
+    environment:
+      PORT: '8787'
+      HOST: 0.0.0.0
+      # 不再启动 PG 容器：默认连宿主机上的 PostgreSQL。
+      # 需要连接别的实例时，在 .env 里设置 DOCKER_DATABASE_URL 覆盖。
+      DATABASE_URL: ${DOCKER_DATABASE_URL:-postgres://memlattice:memlattice@host.docker.internal:5432/memlattice}
+      MEMLATTICE_TOKEN: ${MEMLATTICE_TOKEN:?请先在 .env 里设置 MEMLATTICE_TOKEN}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8787}
+      DEFAULT_BUDGET_TOKENS: '1200'
+      WORKER_ENABLED: 'true'
+      WORKER_HOUR: '3'
+    # Linux 上让 host.docker.internal 指向宿主机网关；Docker Desktop（Win/Mac）原生支持，重复声明无副作用
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '8787:8787'
+    restart: unless-stopped

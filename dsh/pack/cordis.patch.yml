@@ -1,0 +1,13 @@
+# MemLattice 组合包自带的配置层。
+# 这里不写任何绝对路径：运行时路径、数据库位置都由 `dsh-memlattice serve` 在进程内解析，
+# 所以换机器、换用户名、换 DSH_HOME 都不需要改这份配置。
+- insert:
+    - id: mcp-memlattice
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        transport: stdio
+        serverName: memlattice
+        command: npx
+        args: ['-y', 'dsh-memlattice@0.1.12', 'serve']
+        env:
+          DB_DIALECT: 'sqlite'

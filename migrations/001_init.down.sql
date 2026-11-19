@@ -1,0 +1,16 @@
+-- MemLattice 001_init 回滚（NFR-06：迁移可回滚）
+DROP TABLE IF EXISTS condense_job;
+DROP TABLE IF EXISTS mem_trash;
+DROP TABLE IF EXISTS mem_version;
+DROP TABLE IF EXISTS mem_audit;
+DROP TABLE IF EXISTS promotion_candidate;
+DROP TABLE IF EXISTS card_raw;
+DROP TABLE IF EXISTS mem_raw CASCADE;
+DROP TABLE IF EXISTS card_term;
+DROP TABLE IF EXISTS mem_card;
+DROP TABLE IF EXISTS mem_event;
+DROP TABLE IF EXISTS term_edge;
+DROP TABLE IF EXISTS term;
+DROP TABLE IF EXISTS mem_block;
+DROP TABLE IF EXISTS app_user;
+DROP TABLE IF EXISTS schema_migration;

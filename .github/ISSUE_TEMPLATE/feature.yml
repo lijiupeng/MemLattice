@@ -1,0 +1,48 @@
+name: 功能建议
+description: 想要的能力或改进
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先说清「要解决什么问题」，比直接给方案更有用。
+
+        注意本项目采用 PolyForm Noncommercial 1.0.0：可以自用与修改，禁止商业用途。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的具体问题
+      placeholder: 每次召回都要手动补同义词，因为 ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你希望的解法
+      description: 有具体接口形状或配置项更好
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 你试过的替代方案
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 影响范围
+      options:
+        - 召回质量
+        - 写入与成卡
+        - 生命周期与淡忘
+        - MCP / 接口
+        - 管理端界面
+        - 部署与安装
+        - 文档
+    validations:
+      required: true

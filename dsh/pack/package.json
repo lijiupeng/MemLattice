@@ -1,0 +1,33 @@
+{
+  "name": "dsh-memlattice",
+  "version": "0.1.12",
+  "description": "把 MemLattice 长期记忆接进 DeepSeek Harness：作为组合包一键安装，也可用 CLI 安装",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "type": "module",
+  "bin": {
+    "dsh-memlattice": "bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "runtime",
+    "cordis.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "prepublishOnly": "node -e \"const fs=require('fs');for(const f of ['runtime/dist/mcp-stdio.js','cordis.patch.yml'])if(!fs.existsSync(f)){console.error(f+' 缺失，先执行 npm run pack:runtime');process.exit(1)}\""
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "mcp",
+    "memory"
+  ]
+}

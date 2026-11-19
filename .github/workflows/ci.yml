@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [public, main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: 类型检查 / 单测 / SQLite 全链路
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
+
+      - name: 安装依赖
+        run: |
+          npm ci
+          npm --prefix web ci
+
+      - name: 类型检查（后端 + 前端）
+        run: npm run typecheck
+
+      - name: 核心算法单元测试
+        run: npm test
+
+      - name: SQLite 全链路冒烟
+        run: npm run smoke:sqlite
+
+      - name: 构建
+        run: npm run build:all
+
+      - name: HTTP + MCP 端到端
+        run: npm run smoke:http
+
+  postgres:
+    name: PostgreSQL 真库冒烟
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 真库端到端冒烟（内嵌 PostgreSQL）
+        run: npm run smoke

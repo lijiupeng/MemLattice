@@ -1,0 +1,151 @@
+{
+  // MemLattice 调试/启动配置。按 F5 选择对应项，或从"运行和调试"面板启动。
+  // 默认走 SQLite：不配 DATABASE_URL 即用本地单文件，无需外部数据库。
+  // 首次用演示库前先执行一次 npm run seed:demo（该脚本会删库重建）。
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 日常开发推荐：直接跑 TS 源码，改代码自动重启，断点可命中
+      "type": "node",
+      "request": "launch",
+      "name": "后端 · SQLite 主库 (tsx)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "DB_DIALECT": "sqlite",
+        "SQLITE_PATH": "${workspaceFolder}/data/memlattice.db",
+        "LOG_LEVEL": "info"
+      },
+      "serverReadyAction": {
+        "pattern": "MemLattice 已启动",
+        "uriFormat": "http://localhost:8787",
+        "action": "openExternally"
+      }
+    },
+    {
+      // 演示/录屏用：库里有 19 张示例卡，图谱和列表不空
+      "type": "node",
+      "request": "launch",
+      "name": "后端 · SQLite 演示库 (tsx)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "DB_DIALECT": "sqlite",
+        "SQLITE_PATH": "${workspaceFolder}/data/demo.db",
+        "LOG_LEVEL": "info"
+      },
+      "serverReadyAction": {
+        "pattern": "MemLattice 已启动",
+        "uriFormat": "http://localhost:8787",
+        "action": "openExternally"
+      }
+    },
+    {
+      // 原配置保留：先编译再用 dist 启动，验证过 tsc 的产物
+      "type": "node",
+      "request": "launch",
+      "name": "启动程序",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\dist\\index.js",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "serverReadyAction": {
+        "pattern": "MemLattice 已启动",
+        "uriFormat": "http://localhost:8787",
+        "action": "openExternally"
+      }
+    },
+    {
+      // 调试日志：把日志级别开到 debug 看召回与 SQL 细节
+      "type": "node",
+      "request": "launch",
+      "name": "后端 · 源码调试 (tsx)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "LOG_LEVEL": "debug"
+      },
+      "serverReadyAction": {
+        "pattern": "MemLattice 已启动",
+        "uriFormat": "http://localhost:8787",
+        "action": "openExternally"
+      }
+    },
+    {
+      // 管理端热更新：代理 /api 与 /mcp 到 8787，需与"后端"同时运行
+      "type": "node",
+      "request": "launch",
+      "name": "前端 · Vite",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/web/node_modules/vite/bin/vite.js",
+      "cwd": "${workspaceFolder}/web",
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        // Vite 输出带 ANSI 颜色，"Local:" 与 ":" 之间会被插入转义序列，直接匹配 URL 更稳
+        "pattern": "(http://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      // 桌面客户端走 stdio：stdout 只输出 JSON-RPC，日志在 stderr
+      "type": "node",
+      "request": "launch",
+      "name": "MCP stdio (tsx)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/mcp-stdio.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      // 生命周期巡检单次执行：固化 / 降级 / 淡忘 / 归档，跑完即退出
+      "type": "node",
+      "request": "launch",
+      "name": "巡检 Worker · 单次",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/worker.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "args": ["--once"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      // 生产构建产物调试：先 npm run build，再启动 dist
+      "type": "node",
+      "request": "launch",
+      "name": "后端 · 生产构建 (dist)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/index.js",
+      "preLaunchTask": "npm: build",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      // 一键起后端（演示库）+ 前端开发服务器
+      "name": "全栈 · 演示库 + 前端",
+      "configurations": ["后端 · SQLite 演示库 (tsx)", "前端 · Vite"],
+      "stopAll": true
+    },
+    {
+      // 一键起后端（主库）+ 前端开发服务器
+      "name": "全栈 · 后端 + 前端",
+      "configurations": ["后端 · SQLite 主库 (tsx)", "前端 · Vite"],
+      "stopAll": true
+    }
+  ]
+}

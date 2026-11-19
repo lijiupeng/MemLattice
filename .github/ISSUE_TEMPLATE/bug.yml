@@ -1,0 +1,75 @@
+name: Bug 报告
+description: 实际行为与预期不一致时使用
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请先确认：已看过 README 的「已知限制」，并且用的是最新提交。
+
+        贴日志前请删掉令牌、数据库连接串和任何私人内容。
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: 存储后端
+      options:
+        - SQLite（默认）
+        - PostgreSQL
+        - 不确定
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本或提交
+      description: release 版本号，或 `git rev-parse --short HEAD` 的输出
+      placeholder: v0.1.0 / 9f7ae68
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望发生什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际发生了什么
+      description: 有错误码请一并贴上，例如 `E_BUDGET_EXCEEDED`
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 命令行、MCP 调用参数或页面操作路径，越具体越好
+      placeholder: |
+        1. npm run dev
+        2. 调用 memory.recall，参数 ...
+        3. 看到 ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志
+      description: 服务端 JSON 日志或浏览器控制台输出，注意脱敏
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境
+      placeholder: Windows 11 / Node 22.22 / Chrome 141
+    validations:
+      required: false
